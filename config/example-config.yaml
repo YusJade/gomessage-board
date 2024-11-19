@@ -1,0 +1,2 @@
+http-addr: 127.0.0.1:25595
+mongodb-url: mongodb://<root>:<password>@<hostname>:<port>
