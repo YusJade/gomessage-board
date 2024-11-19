@@ -20,6 +20,11 @@ type HTTPServer struct {
 
 // (GET /message-board)
 func (s HTTPServer) GetMessageBoard(c *gin.Context) {
+	logrus.Info("execute HTTPServer.GetMessageBoard")
+	defer func() {
+		logrus.Info("finished HTTPServer.GetMessageBoard")
+	}()
+
 	cur, err := s.collection.Find(c, bson.D{}, options.Find())
 	if err != nil {
 		logrus.Error("mongo.Collection.Find failed:", err)
@@ -29,11 +34,15 @@ func (s HTTPServer) GetMessageBoard(c *gin.Context) {
 
 	res := []domain.Message{}
 	cur.All(c, &res)
-	c.JSON(http.StatusOK, gin.H{"message": "success", "data": res})
+	c.JSON(http.StatusOK, res)
 }
 
 // (POST /message-board)
 func (s HTTPServer) PostMessageBoard(c *gin.Context) {
+	logrus.Info("execute HTTPServer.PostMessageBoard")
+	defer func() {
+		logrus.Info("finished HTTPServer.PostMessageBoard")
+	}()
 	var req ports.Message
 	if err := c.ShouldBindJSON(&req); err != nil {
 		logrus.Errorf("failed to bind json to object: %v | %v", err.Error(), req)
@@ -41,8 +50,9 @@ func (s HTTPServer) PostMessageBoard(c *gin.Context) {
 		return
 	}
 	writeModel := &domain.Message{
-		ID:       primitive.NewObjectID(),
-		Content:  *req.Content,
+		ID:      primitive.NewObjectID(),
+		Content: *req.Content,
+
 		Datetime: time.Now().UTC().Format(time.RFC3339),
 	}
 	logrus.SetLevel(logrus.DebugLevel)
