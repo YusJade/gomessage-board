@@ -1,0 +1,67 @@
+openapi: 3.0.3
+info:
+  title: message board
+  version: 1.0.0
+servers:
+  - url: "http://{hostname}/api"
+    variables:
+      hostname:
+        default: 127.0.0.1
+
+paths:
+  /message-board:
+    get:
+      description: get message
+      responses:
+        "200":
+          description: todo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+
+        default:
+          description: todo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      description: post message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Message"
+
+      responses:
+        "200":
+          description: todo
+
+        default:
+          description: todo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        content:
+          type: string
+        datetime:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
